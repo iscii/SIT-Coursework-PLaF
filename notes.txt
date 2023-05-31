@@ -1,0 +1,1 @@
+to run a .ml file in utop REPL, ctrl + shift + P -> OCaml: Open in REPL
