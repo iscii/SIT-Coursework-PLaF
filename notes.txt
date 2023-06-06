@@ -1,1 +1,7 @@
 to run a .ml file in utop REPL, ctrl + shift + P -> OCaml: Open in REPL
+
+dune build
+dune ??
+dune utop
+
+.ocamlinit to open paths of constructors to get rid of their prefixes in result logs
