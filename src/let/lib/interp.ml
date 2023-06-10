@@ -9,9 +9,9 @@ let rec eval_expr : expr -> exp_val ea_result =
   | Int(n) ->
     return (NumVal n)
   | Var(id) ->
-    apply_env id
+    apply_env id (* lookup id in en. defined in ds.ml *)
   | Add(e1,e2) ->
-    eval_expr e1 >>=
+    eval_expr e1 >>= (*fun ev -> but we don't need it bc >>= associates to the left and so the return val of eval_expr e1 feeds immediately into int_of_numVal*)
     int_of_numVal >>= fun n1 ->
     eval_expr e2 >>=
     int_of_numVal >>= fun n2 ->
