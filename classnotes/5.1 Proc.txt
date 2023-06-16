@@ -1,0 +1,91 @@
+Week5 Notes (Proc)
+
+parse to parse concrete syntax into abstract syntax
+interp to interpret/evaluate code and get a return value.
+encase expression in double quotes.
+
+PROC
+
+proc is similar to fun in ocaml. just defines a function with a parameter that can be called.
+
+let f = proc (x) { x -11 }
+in ( f (f 77)) #=> 55
+
+( proc (f) { (f ( f 77)) } proc (x) { x -11 }) #=> 55
+
+let x = 2
+in let f = proc (z ) { z - x }
+in let x = 1
+in let g = proc (z ) { z - x }
+in ( f 1) - (g 1)
+   - x in f = 2, while x in g = 1. the result = -1 (statically scoped, more standard)
+   - If we let x override the value of x in f, it's dynamically scoped.
+
+proc of string*texpr option*expr, where string = parameter names, texpr option = parameter types (ex. Some IntType, None), expr = expression (ex. Add(Var "x", Int 1)
+
+to call a proc, encase function and parameters in parenthesis: parse "(f 2)";;
+
+Semantics
+- Spec
+  + Results: R = Z \cup B \cup C \cup { error } 
+                   Where C is the set of closures (id, e, env)
+      -> Let: R = Z \cup B \cup { error } 
+           - Z = integer, B = boolean.
+      ->  let x=1+2 #=> 3
+            in x+7 #=> P \rho [x:=3], where the environment is inside the 
+                               square brackets. x+7 creates the environment.
+      -> let f = proc(x) { x + 1 }
+           in (f 3) + (f 4) #=> P \rho [f:=("x",Add(Var "x", Int 1)]
+                 - (f 3), run Add in environment with x=3.
+                 - (f 4), run Add in env with x=4.
+                 - flaw: need to specify variable values in the environment. 
+       -> Need function to return a closure = a triple (tuple with 3 args) with 
+                                                                      args:
+                                      - id (formal/header params), 
+                                        e (body, or expression) and 
+                                        \rho (environment)
+                                      - environment is impo so we have context of 
+                                         defined vars used in function and results of other 
+                                         functions.
+  + Evaluation Judgements
+      \e , \rho \||/
+  + Evaluation Rules
+      
+- e1 (function), \rho (env) \||/ (id, e, \rho) (closure)
+- e2 (param), \rho (env) \||/ w (value of param)
+- e (expression), \rho o+ (where) {id:=w (param)} (extended env from e1) 
+   \||/ v (return result of expression)
+
+- we use the environment in the closure
+
+Errors so far:
+- Arith: div by zero
+- Let: not an int, not a bool, unbound var
+- Proc: unbound function
+
+examples:
+let f=proc (x) { proc (y) { x + y } }
+in ((f 2) 3);; #=> 5
+
+let f=proc (x) { proc (y) { x + y } }
+in (f 2);; #=> a ProcVal where env has x=2
+
+let f=proc (x) { x + 1 }
+in let g=proc (y) { y + 2 }
+in g;; #=> a ProcVal where env has a ProcVal
+
+what about recursive procs?
+let f = proc (x) { if zero?(x) then 1 else x*(f (x-1)) }
+in (f 5);; #=> Error: "f not found"
+  - the function f calls an f that cannot be found in the env (env is empty)
+  - trick for proc:
+    let f = proc (g) { if zero?(x) then 1 else x*((g g) (x-1)) }
+    in ((f f) 5);; #=> 120
+       - higher-order trick allows us to define recursive functions.
+             - when we call f we give it a copy of itself. 
+             - still a trick, not the best implementation. also cannot handle types
+  - recursion will be in new language REC. (i think rec is gonna put the function f into the environment for itself before returning the ProcVal)
+
+debug() is a breakpoint that dumps the environment at time of call.
+
+- In an environment, the lookup of the operation starts from THE END. Bottom-most var in env is most recent.

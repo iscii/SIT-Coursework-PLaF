@@ -1,0 +1,32 @@
+MIDTERM Notes
+- ON MIDTERM: Know how to derive an expression. 
+   - Read Inductive Notes/Definitions chapter
+   - Add derivations to cheatsheet**
+- ON MIDTERM: Know the result of a debug() call
+   - What vars are in env at time of call
+   - procs in proc are not ProcVals because they aren't yet evaluated. they're 
+      just Proc(...) and all the other Abstract Syntax in the proc expression.
+- Concrete syntax vs abstract syntax
+   - Concrete: z-x
+   - Abstract: Sub(Var "z", Var "x")
+- Do exercises (3.4.3-9, etc..)
+
+
+Midterm
+5 exercises:
+- Derivation
+- Result of evaluating code in PROC 
+- Result of evaluating code in REC 
+- debug question (typically in REC). 
+- Simple extension to LET.
+    a. The homework pertains to this question
+    b. code the interpreter
+    c. example: extend with record, trees, etc
+    d. we are not asked to write evaluation rules, if asked to write a derivation 
+       we will always be given the evaluation rules
+    e. won't be asked to write an evaluation rule for a new program/feature
+Midterm rules:
+- test is 1 hour and a half,
+- pencil and paper,
+- 1 cheat sheet write OR PRINT on both sides, font as small as u want 
+- no laptop or phone

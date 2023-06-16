@@ -1,0 +1,45 @@
+Week5.2 Notes (Rec)
+
+Semantics
+- Spec
+   + Results: Same as in PROC
+   + Eval Judgements: Same as in PROC
+   + Eval Rules: New Rules
+ - Implementaion
+   
+function stored into env will be stored as a closure: id:=(par, e1, \rho)^r
+- where par are the formal parameters
+- e1 is the body
+- \rho is the environment
+- ^r indicates that it's a special type of closure, a recursive one?
+
+EVarLetRec [laces into the \sigma of the closure it returns the empty, or current, \sigma + the function definition of the requested function.
+
+For now, we'll only deal with having one recursive function being called recursively. But Letrec will store a list of tuples to handle multiple for those cases.
+
+
+Mutable Data Structures in OCaml
+========================
+There are three ways in which we can 
+
+
+1. Arrays 
+    let a = [| 1;2;3 |];;
+    a.(0);; #=> int = 1
+2. References (or pointers)
+    let x = ref 2;;
+    x + 1;; #=> type error int + not applicable to rec
+    !x;; #=> 2
+    x:=28;; #=> set x to 28
+    x:= !x + 1; !x;; #=> increments value pointed to by x
+    x:=1;;
+    (x:=!x+1;!x) + !x;; #=> int = 3
+         # ALL built-in operators (including logical) are evaluated from right to 
+            left in OCaml
+         # !x is evaluated first (1), then the left expression (2). 
+         # Order that operations are evaluated is IMPORTANT.
+     begin e1; e2; ...; en end;; 
+         # Evaluates e1, then e2, then e3, ..., then en. Returns the value of en.
+3. Mutable fields in records
+    <- is the assignment operator for mutable fields.
+      

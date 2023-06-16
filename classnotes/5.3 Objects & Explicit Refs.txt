@@ -1,0 +1,59 @@
+Objects & Rec Pointer Extension 'Explicit-Refs'
+
+let c = let s = ref 0
+    in fun () ->
+        begin
+        s:=!s+1;
+        !s
+        end;;
+# val c: unit -> int = <fun>
+# c();;
+- : int = 1
+# c();;
+- : int = 2
+# c();;
+- : int = 3
+
+c() is a STATEFUL function
+s is local to c. it is a ref (pointer) to the heap, stored in the
+ProcVal hidden in c.
+
+c is an object.
+
+# UNIT IS OUR VOID TYPE!!
+let add_first: 'a -> 'a ll -> unit =
+    fun e ll -
+    ll.head <- Some { data=e; next=ll.head};
+    ll.size <- ll.size+1
+
+EXPLICIT-REFS
+
+need to add RefVal and UnitVal (void)
+    - side effect creating operations will use UnitVal
+
+newref(2)
+let a = newref(2)
+in a #returns pointer
+
+let a = newref(2)
+in deref(a) #returns 2
+
+let a = newref(2)
+in setref(a, deref(a)+1) #sets a to 2+1
+
+let a = newref(2)
+in begin
+    setref(a, deref(a)+1);
+    deref(a)
+end
+
+let g =
+    let counter = newref(0)
+    in proc(d){
+        begin
+            setref(counter, deref(counter)+1);
+            deref(counter)  
+        end
+    }
+in (g 11) - (g 22)
+
