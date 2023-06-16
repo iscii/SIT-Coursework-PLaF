@@ -1,0 +1,19 @@
+Ref definitions
+
+the Store is the heap.
+
+':=' is the overwrite operator for values in the store.
+'<-' is the assignment operator for variables in the array.
+    let a = Array.make("hello", 4);
+    a.(0) <- "world";
+    - : a = ["world", "hello", "hello", "hello"]
+\sigma is the store/heap.https://chat.openai.com/c/b19529f9-63c0-401d-96bf-9c487782b38d
+
+records are like objects. we can assign values to keys.
+parser returns a Record type when parsing a record. 
+
+parse "{cwid=102; age=23}";;
+Record [("cwid", (false, Int 102)); ("age", (false, Int 23))]
+
+
+no explicit refs in midterm
