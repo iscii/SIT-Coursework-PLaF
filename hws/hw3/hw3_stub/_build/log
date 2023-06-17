@@ -1,0 +1,230 @@
+# dune utop
+# OCAMLPARAM: unset
+# Shared cache: disabled
+# Workspace root:
+# /home/iscii/SIT-coursework/CS496/SIT-Coursework-PLaF/hws/hw3/hw3_stub
+# Auto-detected concurrency: 12
+$ /usr/sbin/ocamlc.opt -config > /tmp/dune_573403_output
+# Dune context:
+#  { name = "default"
+#  ; kind = "default"
+#  ; profile = Dev
+#  ; merlin = true
+#  ; for_host = None
+#  ; fdo_target_exe = None
+#  ; build_dir = In_build_dir "default"
+#  ; ocaml_bin = External "/usr/sbin"
+#  ; ocaml = Ok External "/usr/sbin/ocaml"
+#  ; ocamlc = External "/usr/sbin/ocamlc.opt"
+#  ; ocamlopt = Ok External "/usr/sbin/ocamlopt.opt"
+#  ; ocamldep = Ok External "/usr/sbin/ocamldep.opt"
+#  ; ocamlmklib = Ok External "/usr/sbin/ocamlmklib.opt"
+#  ; env =
+#      map
+#        { "DUNE_OCAML_HARDCODED" :
+#            "/usr/lib/ocaml:/home/iscii/.opam/default/lib"
+#        ; "DUNE_OCAML_STDLIB" : "/usr/lib/ocaml"
+#        ; "DUNE_SOURCEROOT" :
+#            "/home/iscii/SIT-coursework/CS496/SIT-Coursework-PLaF/hws/hw3/hw3_stub"
+#        ; "INSIDE_DUNE" :
+#            "/home/iscii/SIT-coursework/CS496/SIT-Coursework-PLaF/hws/hw3/hw3_stub/_build/default"
+#        ; "OCAMLFIND_IGNORE_DUPS_IN" :
+#            "/home/iscii/SIT-coursework/CS496/SIT-Coursework-PLaF/hws/hw3/hw3_stub/_build/install/default/lib"
+#        ; "OCAMLPATH" :
+#            "/home/iscii/SIT-coursework/CS496/SIT-Coursework-PLaF/hws/hw3/hw3_stub/_build/install/default/lib"
+#        ; "OCAMLTOP_INCLUDE_PATH" :
+#            "/home/iscii/SIT-coursework/CS496/SIT-Coursework-PLaF/hws/hw3/hw3_stub/_build/install/default/lib/toplevel"
+#        ; "OCAML_COLOR" : "always"
+#        ; "OPAMCOLOR" : "always"
+#        }
+#  ; findlib_paths =
+#      [ External "/usr/lib/ocaml"; External "/home/iscii/.opam/default/lib" ]
+#  ; natdynlink_supported = true
+#  ; supports_shared_libraries = true
+#  ; ocaml_config =
+#      { version = "5.0.0"
+#      ; standard_library_default = "/usr/lib/ocaml"
+#      ; standard_library = "/usr/lib/ocaml"
+#      ; standard_runtime = "the_standard_runtime_variable_was_deleted"
+#      ; ccomp_type = "cc"
+#      ; c_compiler = "gcc"
+#      ; ocamlc_cflags =
+#          [ "-O2"
+#          ; "-fno-strict-aliasing"
+#          ; "-fwrapv"
+#          ; "-pthread"
+#          ; "-g"
+#          ; "-fno-omit-frame-pointer"
+#          ; "-fPIC"
+#          ; "-march=x86-64"
+#          ; "-mtune=generic"
+#          ; "-O2"
+#          ; "-pipe"
+#          ; "-fno-plt"
+#          ; "-fexceptions"
+#          ; "-Wp,-D_FORTIFY_SOURCE=2"
+#          ; "-Wformat"
+#          ; "-Werror=format-security"
+#          ; "-fstack-clash-protection"
+#          ; "-fcf-protection"
+#          ; "-g"
+#          ; "-ffile-prefix-map=/build/ocaml/src=/usr/src/debug/ocaml"
+#          ; "-flto=auto"
+#          ; "-ffat-lto-objects"
+#          ]
+#      ; ocamlc_cppflags = [ "-D_FILE_OFFSET_BITS=64" ]
+#      ; ocamlopt_cflags =
+#          [ "-O2"
+#          ; "-fno-strict-aliasing"
+#          ; "-fwrapv"
+#          ; "-pthread"
+#          ; "-g"
+#          ; "-fno-omit-frame-pointer"
+#          ; "-fPIC"
+#          ; "-march=x86-64"
+#          ; "-mtune=generic"
+#          ; "-O2"
+#          ; "-pipe"
+#          ; "-fno-plt"
+#          ; "-fexceptions"
+#          ; "-Wp,-D_FORTIFY_SOURCE=2"
+#          ; "-Wformat"
+#          ; "-Werror=format-security"
+#          ; "-fstack-clash-protection"
+#          ; "-fcf-protection"
+#          ; "-g"
+#          ; "-ffile-prefix-map=/build/ocaml/src=/usr/src/debug/ocaml"
+#          ; "-flto=auto"
+#          ; "-ffat-lto-objects"
+#          ]
+#      ; ocamlopt_cppflags = [ "-D_FILE_OFFSET_BITS=64" ]
+#      ; bytecomp_c_compiler =
+#          [ "gcc"
+#          ; "-O2"
+#          ; "-fno-strict-aliasing"
+#          ; "-fwrapv"
+#          ; "-pthread"
+#          ; "-g"
+#          ; "-fno-omit-frame-pointer"
+#          ; "-fPIC"
+#          ; "-march=x86-64"
+#          ; "-mtune=generic"
+#          ; "-O2"
+#          ; "-pipe"
+#          ; "-fno-plt"
+#          ; "-fexceptions"
+#          ; "-Wp,-D_FORTIFY_SOURCE=2"
+#          ; "-Wformat"
+#          ; "-Werror=format-security"
+#          ; "-fstack-clash-protection"
+#          ; "-fcf-protection"
+#          ; "-g"
+#          ; "-ffile-prefix-map=/build/ocaml/src=/usr/src/debug/ocaml"
+#          ; "-flto=auto"
+#          ; "-ffat-lto-objects"
+#          ; "-D_FILE_OFFSET_BITS=64"
+#          ]
+#      ; bytecomp_c_libraries = [ "-lm"; "-lpthread" ]
+#      ; native_c_compiler =
+#          [ "gcc"
+#          ; "-O2"
+#          ; "-fno-strict-aliasing"
+#          ; "-fwrapv"
+#          ; "-pthread"
+#          ; "-g"
+#          ; "-fno-omit-frame-pointer"
+#          ; "-fPIC"
+#          ; "-march=x86-64"
+#          ; "-mtune=generic"
+#          ; "-O2"
+#          ; "-pipe"
+#          ; "-fno-plt"
+#          ; "-fexceptions"
+#          ; "-Wp,-D_FORTIFY_SOURCE=2"
+#          ; "-Wformat"
+#          ; "-Werror=format-security"
+#          ; "-fstack-clash-protection"
+#          ; "-fcf-protection"
+#          ; "-g"
+#          ; "-ffile-prefix-map=/build/ocaml/src=/usr/src/debug/ocaml"
+#          ; "-flto=auto"
+#          ; "-ffat-lto-objects"
+#          ; "-D_FILE_OFFSET_BITS=64"
+#          ]
+#      ; native_c_libraries = [ "-lm"; "-lpthread" ]
+#      ; native_pack_linker = [ "ld"; "-r"; "-o" ]
+#      ; cc_profile = []
+#      ; architecture = "amd64"
+#      ; model = "default"
+#      ; int_size = 63
+#      ; word_size = 64
+#      ; system = "linux"
+#      ; asm = [ "as" ]
+#      ; asm_cfi_supported = true
+#      ; with_frame_pointers = true
+#      ; ext_exe = ""
+#      ; ext_obj = ".o"
+#      ; ext_asm = ".s"
+#      ; ext_lib = ".a"
+#      ; ext_dll = ".so"
+#      ; os_type = "Unix"
+#      ; default_executable_name = "a.out"
+#      ; systhread_supported = true
+#      ; host = "x86_64-pc-linux-gnu"
+#      ; target = "x86_64-pc-linux-gnu"
+#      ; profiling = false
+#      ; flambda = false
+#      ; spacetime = false
+#      ; safe_string = true
+#      ; exec_magic_number = "Caml1999X032"
+#      ; cmi_magic_number = "Caml1999I032"
+#      ; cmo_magic_number = "Caml1999O032"
+#      ; cma_magic_number = "Caml1999A032"
+#      ; cmx_magic_number = "Caml1999Y032"
+#      ; cmxa_magic_number = "Caml1999Z032"
+#      ; ast_impl_magic_number = "Caml1999M032"
+#      ; ast_intf_magic_number = "Caml1999N032"
+#      ; cmxs_magic_number = "Caml1999D032"
+#      ; cmt_magic_number = "Caml1999T032"
+#      ; natdynlink_supported = true
+#      ; supports_shared_libraries = true
+#      ; windows_unicode = false
+#      }
+#  }
+$ (cd _build/default && /usr/sbin/ocamldep.opt -modules -impl lib/interp.ml) > _build/default/lib/.proc.objs/proc__Interp.impl.d
+$ (cd _build/default && /usr/sbin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -A -g -bin-annot -I lib/.proc.objs/byte -I /home/iscii/.opam/default/lib/menhirLib -I /home/iscii/.opam/default/lib/parser_plaf -no-alias-deps -opaque -open Proc -o lib/.proc.objs/byte/proc__Interp.cmo -c -impl lib/interp.ml)
+> File "lib/interp.ml", line 80, characters 9-11:
+> 80 |   | Cons(e1, e2) ->
+>               ^^
+> Warning 27 [unused-var-strict]: unused variable e1.
+> File "lib/interp.ml", line 80, characters 13-15:
+> 80 |   | Cons(e1, e2) ->
+>                   ^^
+> Warning 27 [unused-var-strict]: unused variable e2.
+> File "lib/interp.ml", line 82, characters 6-10:
+> 82 |   | Hd(e1) ->
+>            ^^^^
+> Warning 27 [unused-var-strict]: unused variable e1.
+> File "lib/interp.ml", line 84, characters 6-10:
+> 84 |   | Tl(e1) ->
+>            ^^^^
+> Warning 27 [unused-var-strict]: unused variable e1.
+> File "lib/interp.ml", line 112, characters 9-13:
+> 112 |   | Tuple(es) ->
+>                ^^^^
+> Warning 27 [unused-var-strict]: unused variable es.
+> File "lib/interp.ml", line 114, characters 12-15:
+> 114 |   | Untuple(ids,e1,e2) ->
+>                   ^^^
+> Warning 27 [unused-var-strict]: unused variable ids.
+> File "lib/interp.ml", line 114, characters 16-18:
+> 114 |   | Untuple(ids,e1,e2) ->
+>                       ^^
+> Warning 27 [unused-var-strict]: unused variable e1.
+> File "lib/interp.ml", line 114, characters 19-21:
+> 114 |   | Untuple(ids,e1,e2) ->
+>                          ^^
+> Warning 27 [unused-var-strict]: unused variable e2.
+$ (cd _build/default && /usr/sbin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -warn-error -A -g -a -o lib/proc.cma lib/.proc.objs/byte/proc.cmo lib/.proc.objs/byte/proc__Ds.cmo lib/.proc.objs/byte/proc__Interp.cmo)
+$ (cd _build/default && /usr/sbin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -24 -g -bin-annot -I lib/.utop/.utop.eobjs/byte -I /home/iscii/.opam/default/lib/bytes -I /home/iscii/.opam/default/lib/findlib -I /home/iscii/.opam/default/lib/lambda-term -I /home/iscii/.opam/default/lib/logs -I /home/iscii/.opam/default/lib/lwt -I /home/iscii/.opam/default/lib/lwt/unix -I /home/iscii/.opam/default/lib/lwt_react -I /home/iscii/.opam/default/lib/menhirLib -I /home/iscii/.opam/default/lib/mew -I /home/iscii/.opam/default/lib/mew_vi -I /home/iscii/.opam/default/lib/ocplib-endian -I /home/iscii/.opam/default/lib/ocplib-endian/bigstring -I /home/iscii/.opam/default/lib/parser_plaf -I /home/iscii/.opam/default/lib/react -I /home/iscii/.opam/default/lib/result -I /home/iscii/.opam/default/lib/trie -I /home/iscii/.opam/default/lib/uchar -I /home/iscii/.opam/default/lib/utop -I /home/iscii/.opam/default/lib/uucp -I /home/iscii/.opam/default/lib/uuseg -I /home/iscii/.opam/default/lib/uutf -I /home/iscii/.opam/default/lib/zed -I /usr/lib/ocaml/compiler-libs -I /usr/lib/ocaml/threads -I /usr/lib/ocaml/unix -I lib/.proc.objs/byte -no-alias-deps -o lib/.utop/.utop.eobjs/byte/dune__exe__Utop.cmo -c -impl lib/.utop/utop.ml-gen)
+$ (cd _build/default && /usr/sbin/ocamlc.opt -w @1..3@5..28@30..39@43@46..47@49..57@61..62-40 -strict-sequence -strict-formats -short-paths -keep-locs -w -24 -g -o lib/.utop/utop.exe -output-complete-exe /usr/lib/ocaml/compiler-libs/ocamlcommon.cma /usr/lib/ocaml/compiler-libs/ocamlbytecomp.cma /usr/lib/ocaml/compiler-libs/ocamltoplevel.cma /home/iscii/.opam/default/lib/findlib/findlib.cma /home/iscii/.opam/default/lib/findlib/findlib_top.cma /home/iscii/.opam/default/lib/logs/logs.cma /home/iscii/.opam/default/lib/lwt/lwt.cma /home/iscii/.opam/default/lib/logs/logs_lwt.cma /home/iscii/.opam/default/lib/ocplib-endian/ocplib_endian.cma /home/iscii/.opam/default/lib/ocplib-endian/bigstring/ocplib_endian_bigstring.cma /usr/lib/ocaml/unix/unix.cma /usr/lib/ocaml/threads/threads.cma /home/iscii/.opam/default/lib/lwt/unix/lwt_unix.cma -I /home/iscii/.opam/default/lib/lwt/unix /home/iscii/.opam/default/lib/react/react.cma /home/iscii/.opam/default/lib/lwt_react/lwt_react.cma /home/iscii/.opam/default/lib/result/result.cma /home/iscii/.opam/default/lib/uutf/uutf.cma /home/iscii/.opam/default/lib/uucp/uucp.cma /home/iscii/.opam/default/lib/uuseg/uuseg.cma /home/iscii/.opam/default/lib/zed/zed.cma /home/iscii/.opam/default/lib/trie/trie.cma /home/iscii/.opam/default/lib/mew/mew.cma /home/iscii/.opam/default/lib/mew_vi/mew_vi.cma /home/iscii/.opam/default/lib/lambda-term/lambda_term.cma -I /home/iscii/.opam/default/lib/lambda-term /home/iscii/.opam/default/lib/utop/uTop.cma /home/iscii/.opam/default/lib/menhirLib/menhirLib.cma /home/iscii/.opam/default/lib/parser_plaf/parser_plaf.cma lib/proc.cma lib/.utop/.utop.eobjs/byte/dune__exe__Utop.cmo -linkall -warn-error -31)
