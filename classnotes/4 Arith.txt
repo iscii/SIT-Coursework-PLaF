@@ -13,7 +13,7 @@ ARITH (Concrete Syntax)
 - in 496, we don't care about the ambiguity of the grammar, just whether it's syntactically correct. SO TREE STRUCTURE DOESN'T MATTER HERE... so we don't gotta worry abt PEMDAS? it matters, but not here ig.
 
 Parser turns flat syntax into a tree.
-Sub rep. - (node with operand leaves)\
+Sub rep. - (node with operand leaves)
 - class list (cdecl list) will always be empty till later in the class ([])
 - expr = tree definition. 
 

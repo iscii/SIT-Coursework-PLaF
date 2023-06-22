@@ -2,7 +2,8 @@ Q3
 6/13/2023
 Issac Zheng
 
-Correct (just missing Var T.T):
+Correct:
+let x = 1 in if zero?(x) then 1 else 2
 			
 		      	  {x:=1}(x)=1
 		    ------------------------ EVar 

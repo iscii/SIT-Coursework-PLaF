@@ -35,7 +35,7 @@ Semantics
             in x+7 #=> P \rho [x:=3], where the environment is inside the 
                                square brackets. x+7 creates the environment.
       -> let f = proc(x) { x + 1 }
-           in (f 3) + (f 4) #=> P \rho [f:=("x",Add(Var "x", Int 1)]
+           in (f 3) + (f 4) #=> P \rho [f:=("x",Add(Var "x", Int 1))]
                  - (f 3), run Add in environment with x=3.
                  - (f 4), run Add in env with x=4.
                  - flaw: need to specify variable values in the environment. 

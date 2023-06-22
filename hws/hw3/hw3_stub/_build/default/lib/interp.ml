@@ -1,8 +1,12 @@
+(* 
+Issac Zheng
+I pledge my honor that I have abided by the Stevens Honor System. 
+*)   
+
 open Parser_plaf.Ast
 open Parser_plaf.Parser
 open Ds
 
-(* SHIFT ENTER TO OPEN UTOP?? *)
 let rec eval_expr : expr -> exp_val ea_result = fun e ->
   match e with
   | Int(n) ->
