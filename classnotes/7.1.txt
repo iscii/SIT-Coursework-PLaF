@@ -1,0 +1,33 @@
+4.5.1.1
+
+let a = 3
+in let b = newref(if zero?(a) then 1 else 2)
+in debug(a)
+
+Environment := [
+    a => NumVal 3,
+    b => RefVal 0
+]
+Store := [
+    0 => NumVal 2
+]
+//wrong:
+0 => ITE(IsZero?("a"), Int 1, Int 2)
+//a newref evaluates the exression, then allocates it to the Store
+
+4.5.3.1
+
+let a = 2
+in let b = 3
+in begin
+    set a = b;
+    debug(a)
+end
+
+Environment := [
+    a => RefVal 0,
+    b => 3
+]
+Store := [
+    0 -> 
+]

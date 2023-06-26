@@ -1,0 +1,138 @@
+for hw3: extend envs because...
+typ e'a bt = Empty | Node of 'a * 'a bt*'a bt;;
+let f t = match t with
+    | Empty -> 0
+    | Node(d, l, r) -> d
+
+//need to extend env so we can access d and return it
+//but we don't need to access any of the elements of Node in the hw. just the nodecase that's already accessible. why need to extend env?
+
+
+1. IMPLICIT REFS
+    Syntax
+        Concrete
+        Abstract
+    Semantics
+        Spec
+            Results:    R = EV + { error }
+                        EV = Z + B + Cl + { unit }
+                            where Z = int, B = bool, Cl = closure, unit = void
+                        //vs explicit-refs, we can't manipulate a pointer. will be manipulated implicity instead.
+            Evaluation Judgements:
+                e, \rho, \sigma \||/ r, \sigma'
+            Evaluation Rules:
+                //old (variables are not mutable):
+                             \rho(id) = v
+                ------------------------------------
+                Var(id), \rho, \sigma \||/ v, \sigma
+
+                // Variables are now mutable. We'll have them allocated in the heap for our langauge.
+                //new
+                        \sigma(\rho(id)) = v
+                ------------------------------------
+                Var(id), \rho, \sigma \||/ v, \sigma
+                //added \sigma to \rho. "get the address, then get the contents at the address in environment"
+        Implementations
+
+Variant Datatype (string, int, expr*expr, etc...)
+
+let x=2
+in begin
+    set x=3
+    x
+    end
+#=> NumVal 3
+
+set to change values of variables
+
+BeginEnd is an array of exressions (expr list).
+
+\rho(id) gets address of var.
+\sigma' contains addresses of vars.
+
+In Var:
+    apply_env id = \rho(id)
+    Store.deref g_store l = \sigma(\rho(id))
+    ref_of_refVal = \rho(id) not in L
+
+In Set:
+    eval_expr e = e, \rho, \sgiam \||/ v, \sigma'
+    apply_env id = \rho(id)
+    int_of_refVal = \rho(id) not in L
+    Store.se_ref g_store l v = {\rho(id) := v}
+
+In Let:
+    eval_expr e1 >>= fun w = e1, \rho, \sigma1 \||/ w, \sigma2
+    Store.new_ref g_store w in  ... = σ2 ⊕ {ℓ := w}
+    extend_env id (RefVal l ) >>+ ρ ⊕ {id := ℓ}
+    eval_expr e2 = e2 \||/ v, σ3
+
+Backpatching for letrec (explained in 4.3.3.3)
+
+2. CHECKED
+    2.1 
+    Syntax
+        Concrete
+        Abstract
+    Semantics
+        Spec (Typing Systems)
+            Typing Judgements
+            Typing Rules
+        Implementations
+Types
+    2 Major Classifications of Type Systems:
+    Dynamic type system - checks types at runtime
+    Static type systems - checks types at compiletime. has more benefits - doesn't compromise runtime performance
+
+Type Checking (Java, C) vs Type Inference [more powerful and interestingt to Bonelli] (Javascript, Python... and 'var' is now in Java too?? what)
+we stick to type checking
+
+if 3 then 88 else 69 //not typable: 3 is not a boolean
+let x = 3 in (3 x) //not typable: 3 is not a function
+proc(x) { (x 3) } //OCaml will say x HAS to be a number since it's being applied.
+
+proc(x: int): int = { (x 3) } //we want our programmers to always indicate the type of formal parameters and return type....
+
+Γ is the typing environment
+    Γ |- e:t
+{x: int} |- x+2: int -> valid
+{x: bool} |- x+2: int -> invalid
+typing judgement has tye, expression, and type. 
+separate good typing judgements from bad ones with inductive sets (those that have derivations). if we can build a derivation, it's good
+type checking takes place in parse tree
+
+evaluations are read like this:
+       2
+ ---/-----\-----  ELet or TVar or something
+   1  \||/ 3
+
+
+t1 is type of e1
+let x=2 in x+3. TLet
+
+typing rule for proc or let or app will put the type of the parameter into the typing environment Γ
+
+Def. An expression is typable if there exists a type environment Γ and type t such that the type judgement Γ |- e:t is derivable
+
+is this expression typable?
+let f = proc (x: int) { proc (y: int) { x+y }} in (f 2)
+
+Yes, Take Γ to be {} and t to be int -> int. We show that the following type judgement is derivable
+{} |- let f = proc (x:int) { proc (y: int) { x+y }} in (f 2) : int -> int
+
+
+------------------------ TVar ---------------------- TVar
+{x:int, y:int} |- x: int      {x:int, y:int} |- y: int
+-------------------------------------------------------- TAdd
+            {x:int, y:int} |- x+y: int
+---------------------------------------------- TProc                   --------------------------------- TVar   -------------------------- TInt
+    {x:int} |- proc (y: int) { x+y } : int -> int                       {f:int->int->int} |- f:int->int->int      {f:int->int->int}|- 2: int
+-------------------------------------------------------------- TProc  ---------------------------------=------------------------------------ TApp
+{} |- proc (x:int) { proc (y: int) { x+y }} : int -> int -> int                {f: int->int->int} |- (f 2): int-> int
+---------------------------------------------------------------------------------------------------------------------------------- TLet
+                            {} |- let f = proc (x:int) { proc (y: int) { x+y }} in (f 2) : int -> int
+
+
+5.1.2 Exercises will be exaclty what we get on next quic (6 Qs)
+
+zero?(zero?(0)) is not typable. when trying to derive, we'll get stuck bc TIsZero asks for a type int not bool.
