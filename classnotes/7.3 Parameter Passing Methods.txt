@@ -1,0 +1,113 @@
+interp "let a=2
+        in let b=3
+        in let swap = proc(x) { proc(y) {
+                        let tmp = x
+                        in begin
+                            set x=y;
+                            set y=tmp
+                        end }}
+        in begin
+            ((swap a) b);
+            a
+        end";;  
+#=> Numval 2 (*call by value -> values of a and b copied to x and y 
+               are local to swap*)
+
+interp "let a=2
+        in let b=3
+        in let swap = proc(x) { proc(y) {
+                        let tmp = x
+                        in begin
+                            debug(set x=y);
+                            set y=tmp
+                        end }}
+        in begin
+            ((swap a) b);
+            a
+        end";; 
+-> x and y reference different parts of memory assigned the values of a and b.
+
+we want to copy the pointer address of a to x and b to y.
+aliasing -> two or more diff names that point to same memory location in the heap.
+CALL BY REFERENCE.
+    - only copies address if what's passed is a variable.
+
+| App (e1, e2) ->
+    eval_expr e1 >>=
+    close_of_procVal >>= fun (id,e,en) ->
+    (match e2 with
+        | Var id_arg -> apply_env id_arg (* if id is a VARIABLE, extend env with reference instead of value at reference*)
+            int_of_refVal >>= fun l ->
+            return en >>+
+            extend_env id (RefVal l) >>+
+            eval_expr e
+        | _ -> eval_expr e2 >>= fun ev -> (* if id is not a var (it's a number), extend env with value*)
+            return en >>+
+            extend_env id (RefVal Store.new_ref g_store ev) >>+ 
+            eval_expr e
+    )
+
+Issue (g is a "constant function"):
+"
+letrec f = proc(x) { f(x+1) }
+in let g = proc(y) { 7 }
+in (g (f 1));;
+"
+f is unneeded for g, but it hangs the program bc it's evaluated first.
+
+Adjusting for functions: Call by Name
+| Var(id) ->
+    apply_env id >>=
+    int_of_refVal >>= fun l ->
+    (match Store.deref g_store l with (* "thaw" the frozen thunk *)
+        | Thunk(body, en) -> return en >>+
+          eval_expr body
+        | ev -> return ev
+    )
+| App (e1, e2) ->
+    eval_expr e1 >>=
+    close_of_procVal >>= fun (id,e,en) ->
+    (match e2 with
+        | Var id_arg -> apply_env id_arg (* if id is a VARIABLE, extend env with reference instead of value at reference*)
+            int_of_refVal >>= fun l ->
+            return en >>+
+            extend_env id (RefVal l) >>+
+            eval_expr e
+        | _ -> lookup_env >>= fun curr_en ->
+            extend_env id (RefVal (Store.new_ref g_store Thunk(e2, curr_en))) >>+
+            eval_expr e
+    )
+type exp_val = 
+    Thunk of expr*env //a type to freeze expr and env
+
+Thunk contais App(Var f, Int 1) and [(f, RefVal(0))(g, RefVal(1))]
+-> when running the code, we never bump into y so we don't unfreeze and execute the function
+
+But, consider this:
+letrec f(x) = if zero?(x) then 1 else x*(f (x-1))
+in let g = proc(y) {y+y+y+y+y}
+in (g (f 20));;
+
+Then, call by name is worse bc it uses unneeded resources and time. 
+
+Solution: just implement Memoization - once we evaluate Thunk, evaluate result for next time.
+    - Overwrite location with value of the evaluated expression in the Thunk.
+
+| Var(id) ->
+    apply_env id >>=
+    int_of_refVal >>= fun l ->
+    (match Store.deref g_store l with (* "thaw" the frozen thunk *)
+        | Thunk(body, en) -> return en >>+
+          eval_expr body >>= fun ev ->
+          Store.set_ref g_store l ev >>= fun _ ->
+          return ev
+        | ev -> return ev
+    )
+
+Exercise
+interp "
+let a=1
+in let f=proc(x) {x+x}
+in (f (begin set a=a+1; a end))";;
+#=> returns NumVal 4 in Call by Need bc x=2 after first time x is called.
+#=> returns NumVal 5 in Call by Name bc a will be incremented again when x is called

@@ -1,0 +1,97 @@
+T in TProc stands for Type Rule.
+E in EProc stands for Evaluation Rule.
+Add 'open .*.Ds or .*.ReM' to .ocamlinit to remove that prefix from outputs
+
+Refs Exercises
+
+4.5.1.1 -> IN EXPLICIT-REFS
+"
+let a = 3
+in let b = newref(if zero?(a) then 1 else 2)
+in debug(a)
+"
+Environment := [
+    a => NumVal 3,
+    b => RefVal 0
+]
+Store := [
+    0 => NumVal 2
+]
+- 0 => ITE(IsZero?("a"), Int 1, Int 2) //wrong
+- a newref evaluates the exression, then allocates it to the Store
+
+4.5.3.1 -> IN IMPLICIT-REFS
+"
+let a = 2
+in let b = 3
+in begin
+    set a = b;
+    debug(a)
+end
+"
+Environment := [
+    a => RefVal 0,
+    b => RefVal 1
+]
+Store := [
+    0 -> NumVal 3,
+    1 -> NUmVal 3
+]
+- NumVals assigned in IMPLICIT-REFS are stored in the Store (Heap), and the variables assigned
+to the NumVal are set to a RefVal referencing the address of that NumVal.
+- IMPLICIT-REFS environment should ONLY have RefVals.
+- Q: is the address or value of b copied to a?
+  A: when we assign a variable, we call eval_expr which gets the contents of b. so the contents of b is always copied to a, we don't copy the address.
+- what we see in env is the "topmost activation records" in the runtime stack
+
+Show that the following expression is typable:
+"proc (x: int) { proc (y: bool) {if y then x else x-1} }"
+set G to be {} and t to be int -> bool -> int, then we can show that
+    G |- proc (x: int) {proc (y: bool) {if y then x else x-1} }:t
+
+Tree Structure (bottom is root)                                             
+                                                                      {x: int, y: bool}(x) = int
+                                                                      ---------------------------TVar   --------------------------TInt
+{x: int, y: bool}(y) = bool       {x: int, y: bool}(x) = int          {x: int, y: bool }|- x: int       {x: int, y: bool} |- 1: int
+----------------------------TVar  -----------------------------TVar   ----------------------------------------------------------------TSub
+{x: int, y: bool} |- y: bool      {x: int, y: bool} |- x: int                           {x: int, y: bool} |- x-1: int
+--------------------------------------------------------------------------------------------------------------------------------------TITE
+                                        {x: int, y: bool} |- if y then x else x-1: int
+--------------------------------------------------------------------------------------------------------------------------------------TProc
+                                {x: int} |- proc (y: bool) {if y then x else x-1}: bool -> int
+--------------------------------------------------------------------------------------------------------------------------------------TProc
+                        {} |- proc (x: int) { proc (y: bool) {if y then x else x-1} }: int -> bool -> int
+
+
+
+Is x+1 typable? -> Yes
+- what goes into the environment?
+Set Gamme to be {x: int} and t to be int. Then the typing judgement
+    G |- x+1: t
+is derivable. We show that below.
+
+{x: int}(x) = int
+------------------TVar  ------------------TInt
+{x: int} |- x: int      {x: int} |- 1: int
+------------------------------------------TSub
+            {x: int} |- x+1: int
+
+**We must set x to an int in the environment at first for this to be typable.
+**We can pick whatever typing environment we need to prove it to be typable. 
+    - try to pick the minimum number of items in an environment to prove an expression typable.
+    - the more stuff you add to an expression already provable by the current env, you're "weakening" it.
+
+Checked
+
+Implementing ✓
+Syntax
+- Concrete
+- Abstract
+Semantics
+- Spec
+    + Typing Judgements
+    + Typing Rules
+
+t1 → t2 #=> a FuncType with formal param of type t1 that returns a value of type t2
+Γ,id:t1 |- e2:t2 #=> first extend the type env with id = t1 (extend_tenv id t1 >>+), then check e2 and get its type t2 (chk_expr e2 (>>= fun t2 -> ... if more stuff to do w t2 after))
+

@@ -1,0 +1,65 @@
+depict env and store @ breakpoint for EXPLICIT-REFS program
+"
+let a = newref(2+1)
+in let b = newref(deref(a)+1)
+in debug(a)
+"
+Env:= [
+    a:=RefVal 0
+    b:=RefVal 1
+]
+Store:= [
+    0:=NumVal 3
+    1:=NumVal 4
+]
+
+depict the env and store @ breakpoint for IMPLICIT-REFS program
+"
+let x=2
+in let y=set x=3
+in let z=proc(y) {proc(w) {set x=y+w}}
+in debug(3)
+"
+Env:= [
+    x:=RefVal 0
+    y:=RefVal 1
+    z:=RefVal 2
+]
+Store:= [
+    0:=NumVal 3
+    1:=UnitVal
+    2:=ProcVal("y", proc(x) {set x=y+w}, [x:=RefVal 0, y:=RefVal 1])
+]
+
+show that the following is typable:
+let f=proc(x: int) { proc(y: int) {x-y} } in (f (3-6))
+
+
+------------------------Var  -------------------------TVar
+{x: int, y: int} |- x: i     {x: int, y: int} |- y: i
+-------------------------------------------------------TSub                                 --------------------TInt --------------------TInt
+              {x: int, y: int} |- x-y: i                                                              {f: i->i->i} |- 3: i     {f: i->i->i} |- 6: i
+-------------------------------------------------TProc       --------------------------TVar ---------------------------------------------TSub
+        {x: int} |- proc(y: int) {x-y}: i->i                 {f: i->i->i} |- f: i->i->i                 {f: i->i->i} |- 3-6: i
+-------------------------------------------------TProc       ----------------------------------------------------------------------------TApp
+{} |- proc(x: int) { proc(y: int) {x-y} }: i->i->i                  {f: i->i->i} |- (f (3-6)): i->i
+-----------------------------------------------------------------------------------------------------------------------------------------TLet
+                            {} |- let f=proc(x: int) { proc(y: int) {x-y} } in (f (3-6)): int -> int
+
+
+Do the typechecking extension Exercise 3.2.4 in checked.ml (look at Let case for Unpair)
+
+"unpair (x, y) = pair(1, 2) in x+y"
+unpair to break up a pair
+
+need to implement type checker for pair and unpair
+
+G |- e1: t1   G |- e2: t2
+---------------------------TPair
+  G |- pair(e1, e2): t1*t2
+
+G |- e1: t1*t2  G, id1:t1, id:t2 |- e2:t
+----------------------------------------TUnpair
+   G |- unpair(id1, id2) = e1 in e2: t
+
+typing expression, environment, type (3 things...?)

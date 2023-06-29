@@ -1,0 +1,12 @@
+
+FINAL:
+exercise like q4 typable
+type exercise
+extending type checker
+
+4 Exercises
+- EXPLICIT-REFS
+- IMPLICIT-REFS
+- Type Derivations
+- Simple extension to CHECKED
+
