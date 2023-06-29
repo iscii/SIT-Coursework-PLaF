@@ -125,11 +125,32 @@ and
     sequence (List.map process_field fs) >>= fun evs ->
     return (RecordVal (addIds fs evs))
   | Proj(e,id) ->
-    failwith "implement" 
+    eval_expr e >>=
+    fields_of_recordVal >>= fun f ->
+    (match List.assoc_opt id f with
+    | None -> error "Field does not exist"
+    | Some (_,v) -> return v 
+      (*need (_,v) bc now we have a true/false field for mutable*)
+      (*List.assoc_opt still works bc f is a key(string)-value pair. Just that the value is now a tuple rather than an exp_val*)
+    )
   | SetField(e1,id,e2) ->
-      failwith "implement" 
+    eval_expr e1 >>=
+    fields_of_recordVal >>= fun f ->
+    eval_expr e2 >>= fun l ->
+    (match List.assoc_opt id f with
+    | None -> error "Field does not exist"
+    | Some (b,v) -> 
+        match b with
+        | false -> error "Error: Field not mutable"
+        | true ->
+          int_of_refVal v >>= fun t ->
+          Store.set_ref g_store t l >>= fun _ -> return UnitVal 
+        (* mutable fields will be a RefVal with value of its value's address in Store. *)
+        (* despite the pdf's example in 2.1, p.age will still return the RefVal value (the pointer value) rather than the actual NumVal. *)
+        (* however, if you debug() after setting the ref, it'll show that the value has been correctly changed in the Store. *)
+    )
   | IsNumber(e) ->
-    failwith "implement" 
+    eval_expr e >>= is_numVal >>= fun b -> return @@ BoolVal(b)
   | Unit -> return UnitVal
   | Debug(_e) ->
     string_of_env >>= fun str_env ->
