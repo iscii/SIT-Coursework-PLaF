@@ -156,6 +156,10 @@ let rec chk_expr : expr -> texpr tea_result =
           else error "caseT: types of emptycase and nodecase don't match"
     | _ -> error "caseT: expected a tree type"
     )
+
+  (* record *)
+  | EmptyRecord(None) ->
+    return @@ RecordType([])
   | Debug(_e) ->
     string_of_tenv >>= fun str ->
     print_endline str;

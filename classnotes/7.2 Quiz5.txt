@@ -28,7 +28,7 @@ Env:= [
 Store:= [
     0:=NumVal 3
     1:=UnitVal
-    2:=ProcVal("y", proc(x) {set x=y+w}, [x:=RefVal 0, y:=RefVal 1])
+    2:=ProcVal("y", proc(w) {set x=y+w}, [x:=RefVal 0, y:=RefVal 1])
 ]
 
 show that the following is typable:
