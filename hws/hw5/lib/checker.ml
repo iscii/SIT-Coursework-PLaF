@@ -51,8 +51,7 @@ let rec chk_expr : expr -> texpr tea_result =
      chk_expr body >>= fun t ->
      if t=tRes 
      then chk_expr target
-     else error "LetRec: Type of recursive function does not match
-declaration")
+     else error "LetRec: type of recursive function does not match declaration")
    | Pair(e1,e2) ->
     chk_expr e1 >>= fun t1 ->
     chk_expr e2 >>= fun t2 ->
@@ -68,39 +67,95 @@ declaration")
       
   (* EXPLICIT-REFS *)
   | BeginEnd([]) ->
-    failwith "implement"
+    return UnitType
   | BeginEnd(es) ->
-    failwith "implement"
+    let rec check = function
+      | [] -> return UnitType
+      | [h] -> chk_expr h
+      | h::t -> chk_expr h >>= fun _ -> 
+                check t
+    in check es
   | NewRef(e) ->
-    failwith "implement"
+    chk_expr e >>= fun t ->
+    return @@ RefType(t)
   | DeRef(e) ->
-    failwith "implement"
+    chk_expr e >>= fun t ->
+    (match t with
+      | RefType(t) -> return t
+      | _ -> error "deref: expected a reference type"
+    )
   | SetRef(e1,e2) ->
-    failwith "implement"
-
+    chk_expr e1 >>= fun t1 ->
+    chk_expr e2 >>= fun t2 ->
+    (* check e1 is a ref, then check e2 = e1's type *)
+    (match t1 with
+      | RefType(t) -> if(t=t2) 
+                      then return UnitType 
+                      else error "setref: types of ref and expr don't match"
+      | _ -> error "setref: expected a reference type"
+    )
   (* list *)
   | EmptyList(None) ->
-    failwith "implement"
+    return @@ ListType(UnitType)
   | EmptyList(Some t) ->
-    failwith "implement"
+    return @@ ListType(t)
   | Cons(h, t) ->
-    failwith "implement"
+    chk_expr h >>= fun t1 ->
+    chk_expr t >>= fun t2 ->
+    (match t2 with
+      | ListType(t) -> if(t1=t) 
+                       then return @@ ListType(t) 
+                       else error "cons: type of head and tail don't match"
+      | _ -> error "cons: expected a list type"
+    )
   | IsEmpty(e) ->
-    failwith "implement"
+    chk_expr e >>= fun t ->
+    (match t with
+      | ListType(_) -> return BoolType
+      | TreeType(_) -> return BoolType
+      | _ -> error "isempty: expected a list type"
+    )
   | Hd(e) ->
-    failwith "implement"
+    chk_expr e >>= fun te ->
+    (match te with
+      | ListType(t) -> return t
+      | _ -> error "hd: expected a list type"
+    )
   | Tl(e) ->
-    failwith "implement"
+    chk_expr e >>= fun te ->
+    (match te with
+      | ListType(t) -> return @@ ListType(t)
+      | _ -> error "tl: expected a list type"
+    )
 
   (* tree *)
   | EmptyTree(None) ->
-    failwith "implement"
+    return @@ TreeType(UnitType)
   | EmptyTree(Some t) ->
-    failwith "implement"
+    return @@ TreeType(t)
   | Node(de, le, re) ->
-    failwith "implement"
+    chk_expr de >>= fun t1 ->
+    chk_expr le >>= fun t2 ->
+    chk_expr re >>= fun t3 ->
+    (* t2 and t3 must be trees of same type as t1. *)
+    if t2=TreeType(t1) && t3=TreeType(t1)
+    then return @@ TreeType(t1)
+    else error "node: types of data and subtrees don't match or subtrees aren't trees"
   | CaseT(target,emptycase,id1,id2,id3,nodecase) ->
-    failwith "implement"
+    chk_expr target >>= fun tr ->
+    chk_expr emptycase >>= fun tec ->
+      (match tr with
+      | TreeType(t) ->
+          extend_tenv id1 t >>+
+          extend_tenv id2 (TreeType(t)) >>+
+          extend_tenv id3 (TreeType(t)) >>+
+          chk_expr nodecase >>= fun tnc ->
+          (* e2 and e3 must be of same type s *)
+          if(tec=tnc)
+          then return tnc
+          else error "caseT: types of emptycase and nodecase don't match"
+    | _ -> error "caseT: expected a tree type"
+    )
   | Debug(_e) ->
     string_of_tenv >>= fun str ->
     print_endline str;
@@ -126,6 +181,3 @@ let chk (e:string) : texpr result =
 let chkpp (e:string) : string result =
   let c = e |> parse |> chk_prog
   in run_teac (c >>= fun t -> return @@ string_of_texpr t)
-
-
-
